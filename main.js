@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const annualNetSalaryEl = document.getElementById('annual-net-salary');
     const overallPercentileEl = document.getElementById('overall-percentile');
     const overallPercentileSubtext = document.getElementById('overall-percentile-subtext');
-    const percentileSourcePath = '/.vscode/data/20241231.csv';
+    const percentileSourcePath = '/data/20241231.csv';
     let percentileData = [];
     let maxPercentile = null;
 
