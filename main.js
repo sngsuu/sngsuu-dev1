@@ -7,73 +7,94 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthlyNetSalaryEl = document.getElementById('monthly-net-salary');
     const annualNetSalaryEl = document.getElementById('annual-net-salary');
     const overallPercentileEl = document.getElementById('overall-percentile');
-    const agePercentileEl = document.getElementById('age-percentile');
     const overallPercentileSubtext = document.getElementById('overall-percentile-subtext');
-    const agePercentileSubtext = document.getElementById('age-percentile-subtext');
-    const ageGroupSelect = document.getElementById('age-group-select');
-
-    const percentileBaseTable = [
-        { threshold: 1500000, percentile: 20 },
-        { threshold: 2000000, percentile: 35 },
-        { threshold: 2500000, percentile: 50 },
-        { threshold: 3200000, percentile: 70 },
-        { threshold: 4000000, percentile: 85 },
-        { threshold: 5000000, percentile: 95 }
-    ];
-
-    const ageGroupMultiplier = {
-        "20s": 0.85,
-        "30s": 1.0,
-        "40s": 1.1,
-        "50s": 1.05,
-        "60s": 0.9
-    };
+    const percentileSourcePath = '/.vscode/data/20241231.csv';
+    let percentileData = [];
+    let maxPercentile = null;
 
     const formatAsCurrency = (amount) => {
         return new Intl.NumberFormat('ko-KR').format(Math.round(amount)) + ' 원';
     };
 
-    const getPercentileTableForAge = (ageGroup) => {
-        const multiplier = ageGroupMultiplier[ageGroup] || 1;
-        return percentileBaseTable.map((row) => ({
-            threshold: row.threshold * multiplier,
-            percentile: row.percentile
-        }));
+    const parsePercentileData = (csvText) => {
+        const lines = csvText.trim().split('\n');
+        if (lines.length <= 1) {
+            return [];
+        }
+        const rows = [];
+        for (let i = 1; i < lines.length; i += 1) {
+            const cols = lines[i].split(',').map((item) => item.trim());
+            const label = cols[0] || '';
+            const totalSalary = parseFloat(cols[2]);
+            const match = label.match(/상위\s*([0-9.]+)\s*%/);
+            if (!match || Number.isNaN(totalSalary)) {
+                continue;
+            }
+            rows.push({
+                percentile: parseFloat(match[1]),
+                totalSalary
+            });
+        }
+        return rows;
     };
 
-    const computePercentile = (amount, table) => {
-        let matched = { percentile: 0 };
-        for (const row of table) {
-            if (amount >= row.threshold) {
-                matched = row;
+    const loadPercentileData = async () => {
+        try {
+            const response = await fetch(percentileSourcePath);
+            if (!response.ok) {
+                throw new Error('failed to load percentile data');
             }
+            const buffer = await response.arrayBuffer();
+            let csvText = '';
+            try {
+                csvText = new TextDecoder('euc-kr').decode(buffer);
+            } catch (decodeError) {
+                csvText = new TextDecoder('utf-8').decode(buffer);
+            }
+            percentileData = parsePercentileData(csvText);
+            maxPercentile = percentileData.reduce((max, row) => Math.max(max, row.percentile), 0);
+            updatePercentileDisplay();
+        } catch (error) {
+            overallPercentileEl.textContent = '-';
+            overallPercentileSubtext.textContent = '데이터 로드 실패';
         }
-        const percentile = matched.percentile;
-        return {
-            percentile,
-            topPercent: Math.max(0, 100 - percentile)
-        };
+    };
+
+    const computePercentileFromData = (annualSalaryMan) => {
+        if (!percentileData.length) {
+            return null;
+        }
+        const annualSalaryThousand = annualSalaryMan * 10;
+        let bestMatch = null;
+        percentileData.forEach((row) => {
+            if (annualSalaryThousand >= row.totalSalary) {
+                if (!bestMatch || row.percentile < bestMatch.percentile) {
+                    bestMatch = row;
+                }
+            }
+        });
+        return bestMatch ? bestMatch.percentile : null;
     };
 
     let latestMonthlyNetSalary = null;
+    let latestAnnualSalaryMan = null;
 
     const updatePercentileDisplay = () => {
-        if (!latestMonthlyNetSalary) {
+        if (!latestMonthlyNetSalary || latestAnnualSalaryMan === null) {
             return;
         }
 
-        const overall = computePercentile(latestMonthlyNetSalary, percentileBaseTable);
-        overallPercentileEl.textContent = `상위 ${overall.topPercent}%`;
-        overallPercentileSubtext.textContent = `하위 ${overall.percentile}% 기준`;
-
-        const ageGroup = ageGroupSelect.value;
-        const ageTable = getPercentileTableForAge(ageGroup);
-        const agePercentile = computePercentile(latestMonthlyNetSalary, ageTable);
-        agePercentileEl.textContent = `상위 ${agePercentile.topPercent}%`;
-        agePercentileSubtext.textContent = `${ageGroupSelect.options[ageGroupSelect.selectedIndex].text} 기준`;
+        const percentile = computePercentileFromData(latestAnnualSalaryMan);
+        if (percentile === null) {
+            overallPercentileEl.textContent = maxPercentile ? `상위 ${maxPercentile}% 밖` : '-';
+            overallPercentileSubtext.textContent = maxPercentile ? '데이터 범위 외' : '데이터 로딩 중';
+            return;
+        }
+        overallPercentileEl.textContent = `상위 ${percentile}%`;
+        overallPercentileSubtext.textContent = '국세청 근로소득 기준';
     };
 
-    ageGroupSelect.addEventListener('change', updatePercentileDisplay);
+    loadPercentileData();
 
     calculateBtn.addEventListener('click', () => {
         const annualSalaryInput = parseFloat(salaryInput.value);
@@ -138,8 +159,19 @@ document.addEventListener('DOMContentLoaded', () => {
         annualNetSalaryEl.textContent = formatAsCurrency(annualNetSalary);
 
         latestMonthlyNetSalary = monthlyNetSalary;
+        latestAnnualSalaryMan = annualSalaryInput;
         updatePercentileDisplay();
 
         resultArea.style.display = 'block';
     });
+
+    const handleEnterKey = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            calculateBtn.click();
+        }
+    };
+
+    salaryInput.addEventListener('keydown', handleEnterKey);
+    dependentsInput.addEventListener('keydown', handleEnterKey);
 });
