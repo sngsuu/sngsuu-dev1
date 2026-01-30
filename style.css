@@ -15,15 +15,58 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     margin: 0;
-    padding: 2rem 1rem;
+    padding-top: 80px; /* Add padding to body to avoid overlap with fixed navbar */
     display: flex;
     justify-content: center;
 }
+
+/* --- Navigation Bar --- */
+.navbar {
+    background-color: var(--card-background-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.navbar-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+}
+
+.nav-logo a {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.nav-menu a {
+    color: #6c757d;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.nav-menu a:hover, .nav-menu a.active {
+    color: var(--primary-color);
+}
+
 
 .container {
     width: 100%;
     max-width: var(--max-width);
     text-align: center;
+    padding: 2rem 1rem;
 }
 
 header {
@@ -50,6 +93,34 @@ header p {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
+/* Section for additional info */
+.info-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+}
+
+.info-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.info-section ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.info-section ul li {
+    margin-bottom: 0.75rem;
+    color: #495057;
+}
+
+.info-section ul li strong {
+    color: var(--text-color);
+}
+
 .input-group {
     margin-bottom: 1.5rem;
 }
@@ -61,16 +132,18 @@ header p {
 }
 
 .input-group input,
-.input-group select {
+.input-group select,
+.input-group textarea {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     font-size: 1rem;
     box-sizing: border-box; /* Ensures padding doesn't affect width */
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
-button#calculate-btn {
+button#calculate-btn, button[type="submit"] {
     width: 100%;
     padding: 0.85rem;
     font-size: 1.1rem;
@@ -83,7 +156,7 @@ button#calculate-btn {
     transition: background-color 0.2s;
 }
 
-button#calculate-btn:hover {
+button#calculate-btn:hover, button[type="submit"]:hover {
     background-color: #0056b3;
 }
 
@@ -127,6 +200,8 @@ button#calculate-btn:hover {
 footer {
     margin-top: 3rem;
     font-size: 0.9rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
 }
 
 footer a {
