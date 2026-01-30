@@ -11,9 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const overallPercentileSubtext = document.getElementById('overall-percentile-subtext');
     const agePercentileSubtext = document.getElementById('age-percentile-subtext');
     const ageGroupSelect = document.getElementById('age-group-select');
-    const medianMonthlyInput = document.getElementById('median-monthly');
-    const medianTableBody = document.getElementById('median-table-body');
-    const medianRatioEl = document.getElementById('median-ratio');
 
     const percentileBaseTable = [
         { threshold: 1500000, percentile: 20 },
@@ -31,8 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         "50s": 1.05,
         "60s": 0.9
     };
-
-    const medianRatios = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5];
 
     const formatAsCurrency = (amount) => {
         return new Intl.NumberFormat('ko-KR').format(Math.round(amount)) + ' 원';
@@ -78,87 +73,20 @@ document.addEventListener('DOMContentLoaded', () => {
         agePercentileSubtext.textContent = `${ageGroupSelect.options[ageGroupSelect.selectedIndex].text} 기준`;
     };
 
-    const buildMedianTableRow = (label, amountText, highlight) => {
-        const row = document.createElement('tr');
-        if (highlight) {
-            row.classList.add('highlight');
-        }
-        const labelCell = document.createElement('td');
-        labelCell.textContent = label;
-        const amountCell = document.createElement('td');
-        amountCell.textContent = amountText;
-        row.appendChild(labelCell);
-        row.appendChild(amountCell);
-        return row;
-    };
-
-    const updateMedianTable = () => {
-        if (!medianTableBody) {
-            return;
-        }
-        const medianMonthly = parseFloat(medianMonthlyInput.value);
-        medianTableBody.innerHTML = '';
-
-        if (!latestMonthlyNetSalary) {
-            medianRatioEl.textContent = '-';
-        } else if (medianMonthly > 0) {
-            const ratioPercent = (latestMonthlyNetSalary / medianMonthly) * 100;
-            medianRatioEl.textContent = `약 ${ratioPercent.toFixed(1)}%`;
-        } else {
-            medianRatioEl.textContent = '-';
-        }
-
-        medianRatios.forEach((ratio, index) => {
-            const lowerRatio = index === 0 ? 0 : medianRatios[index - 1];
-            const upperRatio = ratio;
-            const rangeLabel = index === 0
-                ? `~ ${Math.round(upperRatio * 100)}%`
-                : index === medianRatios.length - 1
-                    ? `${Math.round(lowerRatio * 100)}% ~`
-                    : `${Math.round(lowerRatio * 100)}% ~ ${Math.round(upperRatio * 100)}%`;
-
-            let amountText = '기준값 입력';
-            let highlight = false;
-
-            if (medianMonthly > 0) {
-                const lowerAmount = Math.round(medianMonthly * lowerRatio);
-                const upperAmount = Math.round(medianMonthly * upperRatio);
-
-                amountText = index === 0
-                    ? `~ ${formatAsCurrency(upperAmount)}`
-                    : index === medianRatios.length - 1
-                        ? `${formatAsCurrency(lowerAmount)} ~`
-                        : `${formatAsCurrency(lowerAmount)} ~ ${formatAsCurrency(upperAmount)}`;
-
-                if (latestMonthlyNetSalary) {
-                    if (index === 0) {
-                        highlight = latestMonthlyNetSalary < upperAmount;
-                    } else if (index === medianRatios.length - 1) {
-                        highlight = latestMonthlyNetSalary >= lowerAmount;
-                    } else {
-                        highlight = latestMonthlyNetSalary >= lowerAmount && latestMonthlyNetSalary < upperAmount;
-                    }
-                }
-            }
-
-            const row = buildMedianTableRow(rangeLabel, amountText, highlight);
-            medianTableBody.appendChild(row);
-        });
-    };
-
     ageGroupSelect.addEventListener('change', updatePercentileDisplay);
-    medianMonthlyInput.addEventListener('input', updateMedianTable);
 
     calculateBtn.addEventListener('click', () => {
-        const annualSalary = parseFloat(salaryInput.value);
+        const annualSalaryInput = parseFloat(salaryInput.value);
         const dependents = parseInt(dependentsInput.value, 10);
 
         // 1. 입력값 검증
-        if (isNaN(annualSalary) || annualSalary <= 0) {
+        if (isNaN(annualSalaryInput) || annualSalaryInput <= 0) {
             alert('올바른 연봉을 입력해주세요.');
             salaryInput.focus();
             return;
         }
+
+        const annualSalary = annualSalaryInput * 10000;
 
         // 2. 공제액 계산 (단순화된 모델)
         const monthlySalary = annualSalary / 12;
@@ -211,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         latestMonthlyNetSalary = monthlyNetSalary;
         updatePercentileDisplay();
-        updateMedianTable();
 
         resultArea.style.display = 'block';
     });

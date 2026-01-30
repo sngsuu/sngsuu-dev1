@@ -269,53 +269,6 @@ button#calculate-btn:hover, button[type="submit"]:hover {
     margin-bottom: 1rem;
 }
 
-.median-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    border-radius: var(--border-radius);
-    border: 1px dashed var(--border-color);
-    background-color: #f8f9fa;
-    margin: 0.75rem 0 1rem;
-}
-
-.median-summary strong {
-    font-size: 1.2rem;
-    color: var(--primary-color);
-}
-
-.table-wrap {
-    overflow-x: auto;
-}
-
-.median-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-}
-
-.median-table th,
-.median-table td {
-    padding: 0.75rem;
-    border-bottom: 1px solid var(--border-color);
-    text-align: left;
-}
-
-.median-table thead th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-}
-
-.median-table tr.highlight {
-    background-color: #e8f3ff;
-}
-
-.median-table tr.highlight td:first-child {
-    font-weight: 700;
-    color: #0b5ed7;
-}
-
 .note {
     font-size: 0.85rem;
     color: #6c757d;
@@ -354,9 +307,4 @@ footer .separator {
         grid-template-columns: 1fr;
     }
 
-    .median-summary {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
 }
