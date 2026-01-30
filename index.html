@@ -94,9 +94,17 @@
             <div class="card">
                 <div class="calculator-area">
                     <h3>간편 계산기</h3>
+                    <div class="tab-group" role="tablist" aria-label="계산 방식 선택">
+                        <button type="button" class="tab-button active" data-mode="annual" role="tab" aria-selected="true">연봉 입력</button>
+                        <button type="button" class="tab-button" data-mode="net" role="tab" aria-selected="false">실수령 월급 입력</button>
+                    </div>
                     <div class="input-group">
                         <label for="annual-salary">연봉 (만원)</label>
                         <input type="number" id="annual-salary" placeholder="예: 3000" min="0">
+                    </div>
+                    <div class="input-group" id="net-monthly-group" style="display: none;">
+                        <label for="net-monthly-salary">실수령 월급 (만원)</label>
+                        <input type="number" id="net-monthly-salary" placeholder="예: 250" min="0">
                     </div>
                     <div class="input-group">
                         <label for="dependents">부양가족 수 (본인 포함)</label>
@@ -125,14 +133,31 @@
 
                 <div class="accordion">
                     <details class="accordion-item" open>
-                        <summary>내 실수령액 위치 (상위 퍼센트)</summary>
+                        <summary>내 실수령액 위치 (평균 대비)</summary>
                         <div class="accordion-content">
                             <div class="percentile-grid">
                                 <div class="percentile-card">
-                                    <span>대한민국 전체 기준</span>
-                                    <strong id="overall-percentile">-</strong>
-                                    <small class="percentile-subtext" id="overall-percentile-subtext"></small>
+                                    <span>지역 기준 평균 대비</span>
+                                    <strong id="region-compare">-</strong>
+                                    <small class="percentile-subtext" id="region-compare-subtext"></small>
                                 </div>
+                                <div class="percentile-card">
+                                    <span>성/연령 기준 평균 대비</span>
+                                    <strong id="gender-age-compare">-</strong>
+                                    <small class="percentile-subtext" id="gender-age-compare-subtext"></small>
+                                </div>
+                            </div>
+                            <div class="input-group compact">
+                                <label for="region-select">지역</label>
+                                <select id="region-select"></select>
+                            </div>
+                            <div class="input-group compact">
+                                <label for="gender-select">성별</label>
+                                <select id="gender-select"></select>
+                            </div>
+                            <div class="input-group compact">
+                                <label for="age-select">연령</label>
+                                <select id="age-select"></select>
                             </div>
                         </div>
                     </details>

@@ -125,6 +125,32 @@ header p {
     margin-bottom: 1.5rem;
 }
 
+.tab-group {
+    display: inline-flex;
+    gap: 0.5rem;
+    padding: 0.35rem;
+    border-radius: 999px;
+    background-color: #f1f3f5;
+    margin-bottom: 1.25rem;
+}
+
+.tab-button {
+    border: none;
+    background: transparent;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.tab-button.active {
+    background-color: #ffffff;
+    color: var(--primary-color);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
 .input-group label {
     display: block;
     margin-bottom: 0.5rem;
@@ -238,7 +264,7 @@ button#calculate-btn:hover, button[type="submit"]:hover {
 
 .percentile-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
     margin-bottom: 1rem;
 }
