@@ -76,6 +76,63 @@
                     <span>연간 예상 실수령액</span>
                     <strong id="annual-net-salary">0 원</strong>
                 </div>
+
+                <div class="accordion">
+                    <details class="accordion-item">
+                        <summary>내 실수령액 위치 (상위 퍼센트)</summary>
+                        <div class="accordion-content">
+                            <div class="percentile-grid">
+                                <div class="percentile-card">
+                                    <span>대한민국 전체 기준</span>
+                                    <strong id="overall-percentile">-</strong>
+                                    <small class="percentile-subtext" id="overall-percentile-subtext"></small>
+                                </div>
+                                <div class="percentile-card">
+                                    <span>연령대 기준</span>
+                                    <strong id="age-percentile">-</strong>
+                                    <small class="percentile-subtext" id="age-percentile-subtext"></small>
+                                </div>
+                            </div>
+                            <div class="input-group compact">
+                                <label for="age-group-select">연령대 선택</label>
+                                <select id="age-group-select">
+                                    <option value="20s">20대</option>
+                                    <option value="30s" selected>30대</option>
+                                    <option value="40s">40대</option>
+                                    <option value="50s">50대</option>
+                                    <option value="60s">60대 이상</option>
+                                </select>
+                            </div>
+                            <p class="note" id="percentile-note">※ 퍼센트는 예시 기준입니다. 실제 통계 데이터로 교체해주세요.</p>
+                        </div>
+                    </details>
+
+                    <details class="accordion-item">
+                        <summary>중위소득 구간표</summary>
+                        <div class="accordion-content">
+                            <div class="input-group compact">
+                                <label for="median-monthly">기준 중위소득 (월, 원)</label>
+                                <input type="number" id="median-monthly" placeholder="예: 2200000" min="0">
+                            </div>
+                            <div class="median-summary">
+                                <span>내 월 실수령액의 중위소득 대비</span>
+                                <strong id="median-ratio">-</strong>
+                            </div>
+                            <div class="table-wrap">
+                                <table class="median-table">
+                                    <thead>
+                                        <tr>
+                                            <th>구간</th>
+                                            <th>월 기준 금액</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="median-table-body"></tbody>
+                                </table>
+                            </div>
+                            <p class="note">※ 기준 중위소득을 입력하면 구간 금액과 위치가 강조 표시됩니다.</p>
+                        </div>
+                    </details>
+                </div>
             </div>
             
             <div class="card info-section">

@@ -191,6 +191,137 @@ button#calculate-btn:hover, button[type="submit"]:hover {
     color: var(--primary-color);
 }
 
+.accordion {
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.accordion-item {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background-color: var(--card-background-color);
+    margin-top: 0.75rem;
+}
+
+.accordion-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.accordion-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.accordion-item summary::after {
+    content: "+";
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+.accordion-item[open] summary::after {
+    content: "-";
+}
+
+.accordion-item[open] summary {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.accordion-content {
+    padding: 1rem 1.25rem 1.25rem;
+}
+
+.percentile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.percentile-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    text-align: center;
+    background-color: #f8fbff;
+}
+
+.percentile-card strong {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 1.6rem;
+    color: var(--primary-color);
+}
+
+.percentile-subtext {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.input-group.compact {
+    margin-bottom: 1rem;
+}
+
+.median-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    border: 1px dashed var(--border-color);
+    background-color: #f8f9fa;
+    margin: 0.75rem 0 1rem;
+}
+
+.median-summary strong {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.median-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.median-table th,
+.median-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.median-table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.median-table tr.highlight {
+    background-color: #e8f3ff;
+}
+
+.median-table tr.highlight td:first-child {
+    font-weight: 700;
+    color: #0b5ed7;
+}
+
+.note {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
 .disclaimer {
     font-size: 0.9rem;
     color: #6c757d;
@@ -216,4 +347,16 @@ footer a:hover {
 footer .separator {
     margin: 0 0.5rem;
     color: #adb5bd;
+}
+
+@media (max-width: 640px) {
+    .percentile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .median-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 }
